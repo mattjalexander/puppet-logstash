@@ -85,13 +85,15 @@ class logstash(
   $provider       = 'package',
   $jarfile        = undef,
   $installpath    = $logstash::params::installpath,
+  $logstash_user  = $logstash::pramas::logstash_user,
+  $logstash_group = $logstash::params::logstash_group
+  $configdir      = $logstash::params::configdir,
   $java_install   = false,
   $java_package   = undef,
   $instances      = [ 'agent' ],
+  $multi_instance = true,
   $initfiles      = undef,
   $defaultsfiles  = undef,
-  $logstash_user  = $logstash::pramas::logstash_user,
-  $logstash_group = $logstash::params::logstash_group
 ) inherits logstash::params {
 
   #### Validate parameters
@@ -112,7 +114,19 @@ class logstash(
   validate_array($instances)
 
   if $initfiles {
-    validate_hash($initfiles)
+    if $multi_instance == true {
+      validate_hash($initfiles)
+    } else {
+      validate_string($initfiles)
+    }
+  }
+
+  if $defaultsfiles {
+    if $multi_instance == true {
+      validate_hash($defaultsfiles)
+    } else {
+      validate_string($defaultsfiles)
+    }
   }
 
   #### Manage actions
