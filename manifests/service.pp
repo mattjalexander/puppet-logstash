@@ -89,7 +89,7 @@ class logstash::service {
       # Write defaults file if we have one
       file { "${logstash::params::defaults_location}/logstash":
         ensure => present,
-        source => $defaultsfiles,
+        source => $logstash::defaultsfiles,
         owner  => 'root',
         group  => 'root',
         mode   => '0644',
