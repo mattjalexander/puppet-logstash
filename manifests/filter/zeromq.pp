@@ -144,10 +144,25 @@ define logstash::filter::zeromq (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/filter_${order}_zeromq_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/filter/zeromq/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/filter_${order}_zeromq_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/filter/zeromq/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/filter/zeromq/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -179,13 +194,13 @@ define logstash::filter::zeromq (
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.to_a.flatten.inspect %>')
+    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 
   if ($sockopt != '') {
     validate_hash($sockopt)
-    $arr_sockopt = inline_template('<%= sockopt.to_a.flatten.inspect %>')
+    $arr_sockopt = inline_template('<%= sockopt.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_sockopt = "  sockopt => ${arr_sockopt}\n"
   }
 
@@ -223,9 +238,7 @@ define logstash::filter::zeromq (
   file { $conffiles:
     ensure  => present,
     content => "filter {\n zeromq {\n${opt_add_field}${opt_add_tag}${opt_address}${opt_exclude_tags}${opt_field}${opt_mode}${opt_remove_tag}${opt_sockopt}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

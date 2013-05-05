@@ -125,10 +125,25 @@ define logstash::output::irc (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_irc_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/irc/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_irc_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/irc/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/irc/${name}"
+
+  }
 
   #### Validate parameters
   if ($channels != '') {
@@ -206,9 +221,7 @@ define logstash::output::irc (
   file { $conffiles:
     ensure  => present,
     content => "output {\n irc {\n${opt_channels}${opt_exclude_tags}${opt_fields}${opt_format}${opt_host}${opt_nick}${opt_password}${opt_port}${opt_real}${opt_tags}${opt_type}${opt_user} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

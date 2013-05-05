@@ -104,10 +104,25 @@ define logstash::output::gemfire (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_gemfire_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/gemfire/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_gemfire_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/gemfire/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/gemfire/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -161,9 +176,7 @@ define logstash::output::gemfire (
   file { $conffiles:
     ensure  => present,
     content => "output {\n gemfire {\n${opt_cache_name}${opt_cache_xml_file}${opt_exclude_tags}${opt_fields}${opt_key_format}${opt_region_name}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

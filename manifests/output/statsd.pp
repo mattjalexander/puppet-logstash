@@ -149,10 +149,25 @@ define logstash::output::statsd (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_statsd_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/statsd/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_statsd_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/statsd/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/statsd/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -195,13 +210,13 @@ define logstash::output::statsd (
 
   if ($timing != '') {
     validate_hash($timing)
-    $arr_timing = inline_template('<%= timing.to_a.flatten.inspect %>')
+    $arr_timing = inline_template('<%= timing.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_timing = "  timing => ${arr_timing}\n"
   }
 
   if ($count != '') {
     validate_hash($count)
-    $arr_count = inline_template('<%= count.to_a.flatten.inspect %>')
+    $arr_count = inline_template('<%= count.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_count = "  count => ${arr_count}\n"
   }
 
@@ -246,9 +261,7 @@ define logstash::output::statsd (
   file { $conffiles:
     ensure  => present,
     content => "output {\n statsd {\n${opt_count}${opt_debug}${opt_decrement}${opt_exclude_tags}${opt_fields}${opt_host}${opt_increment}${opt_namespace}${opt_port}${opt_sample_rate}${opt_sender}${opt_tags}${opt_timing}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

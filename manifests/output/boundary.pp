@@ -135,10 +135,25 @@ define logstash::output::boundary (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_boundary_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/boundary/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_boundary_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/boundary/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/boundary/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -213,9 +228,7 @@ define logstash::output::boundary (
   file { $conffiles:
     ensure  => present,
     content => "output {\n boundary {\n${opt_api_key}${opt_auto}${opt_bsubtype}${opt_btags}${opt_btype}${opt_end_time}${opt_exclude_tags}${opt_fields}${opt_org_id}${opt_start_time}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

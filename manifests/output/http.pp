@@ -133,10 +133,25 @@ define logstash::output::http (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_http_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/http/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_http_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/http/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/http/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -167,13 +182,13 @@ define logstash::output::http (
 
   if ($headers != '') {
     validate_hash($headers)
-    $arr_headers = inline_template('<%= headers.to_a.flatten.inspect %>')
+    $arr_headers = inline_template('<%= headers.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_headers = "  headers => ${arr_headers}\n"
   }
 
   if ($mapping != '') {
     validate_hash($mapping)
-    $arr_mapping = inline_template('<%= mapping.to_a.flatten.inspect %>')
+    $arr_mapping = inline_template('<%= mapping.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_mapping = "  mapping => ${arr_mapping}\n"
   }
 
@@ -218,9 +233,7 @@ define logstash::output::http (
   file { $conffiles:
     ensure  => present,
     content => "output {\n http {\n${opt_content_type}${opt_exclude_tags}${opt_fields}${opt_format}${opt_headers}${opt_http_method}${opt_mapping}${opt_message}${opt_tags}${opt_type}${opt_url}${opt_verify_ssl} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

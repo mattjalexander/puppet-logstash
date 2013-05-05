@@ -208,10 +208,25 @@ define logstash::filter::mutate (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/filter_${order}_mutate_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/filter/mutate/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/filter_${order}_mutate_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/filter/mutate/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/filter/mutate/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -273,44 +288,44 @@ define logstash::filter::mutate (
 
   if ($rename != '') {
     validate_hash($rename)
-    $arr_rename = inline_template('<%= rename.to_a.flatten.inspect %>')
+    $arr_rename = inline_template('<%= rename.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_rename = "  rename => ${arr_rename}\n"
   }
 
   if ($replace != '') {
     validate_hash($replace)
-    $arr_replace = inline_template('<%= replace.to_a.flatten.inspect %>')
+    $arr_replace = inline_template('<%= replace.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_replace = "  replace => ${arr_replace}\n"
   }
 
   if ($split != '') {
     validate_hash($split)
     $var_split = $split
-    $arr_split = inline_template('<%= var_split.to_a.flatten.inspect %>')
+    $arr_split = inline_template('<%= var_split.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_split = "  split => ${arr_split}\n"
   }
 
   if ($merge != '') {
     validate_hash($merge)
-    $arr_merge = inline_template('<%= merge.to_a.flatten.inspect %>')
+    $arr_merge = inline_template('<%= merge.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_merge = "  merge => ${arr_merge}\n"
   }
 
   if ($convert != '') {
     validate_hash($convert)
-    $arr_convert = inline_template('<%= convert.to_a.flatten.inspect %>')
+    $arr_convert = inline_template('<%= convert.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_convert = "  convert => ${arr_convert}\n"
   }
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.to_a.flatten.inspect %>')
+    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 
   if ($join != '') {
     validate_hash($join)
-    $arr_join = inline_template('<%= join.to_a.flatten.inspect %>')
+    $arr_join = inline_template('<%= join.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_join = "  join => ${arr_join}\n"
   }
 
@@ -330,9 +345,7 @@ define logstash::filter::mutate (
   file { $conffiles:
     ensure  => present,
     content => "filter {\n mutate {\n${opt_add_field}${opt_add_tag}${opt_convert}${opt_exclude_tags}${opt_gsub}${opt_join}${opt_lowercase}${opt_merge}${opt_remove}${opt_remove_tag}${opt_rename}${opt_replace}${opt_split}${opt_strip}${opt_tags}${opt_type}${opt_uppercase} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

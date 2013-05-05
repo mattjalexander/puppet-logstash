@@ -171,10 +171,25 @@ define logstash::input::drupal_dblog (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/input_drupal_dblog_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/input/drupal_dblog/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/input_drupal_dblog_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/input/drupal_dblog/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/input/drupal_dblog/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -198,13 +213,13 @@ define logstash::input::drupal_dblog (
 
   if ($databases != '') {
     validate_hash($databases)
-    $arr_databases = inline_template('<%= databases.to_a.flatten.inspect %>')
+    $arr_databases = inline_template('<%= databases.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_databases = "  databases => ${arr_databases}\n"
   }
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.to_a.flatten.inspect %>')
+    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 
@@ -255,9 +270,7 @@ define logstash::input::drupal_dblog (
   file { $conffiles:
     ensure  => present,
     content => "input {\n drupal_dblog {\n${opt_add_field}${opt_add_usernames}${opt_bulksize}${opt_charset}${opt_databases}${opt_debug}${opt_format}${opt_interval}${opt_message_format}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

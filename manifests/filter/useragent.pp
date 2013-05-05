@@ -129,10 +129,25 @@ define logstash::filter::useragent (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/filter_${order}_useragent_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/filter/useragent/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/filter_${order}_useragent_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/filter/useragent/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/filter/useragent/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -164,7 +179,7 @@ define logstash::filter::useragent (
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.to_a.flatten.inspect %>')
+    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 
@@ -199,9 +214,7 @@ define logstash::filter::useragent (
   file { $conffiles:
     ensure  => present,
     content => "filter {\n useragent {\n${opt_add_field}${opt_add_tag}${opt_exclude_tags}${opt_regexes}${opt_remove_tag}${opt_source}${opt_tags}${opt_target}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

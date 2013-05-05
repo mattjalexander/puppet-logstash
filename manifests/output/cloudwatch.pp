@@ -262,10 +262,25 @@ define logstash::output::cloudwatch (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_cloudwatch_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/cloudwatch/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_cloudwatch_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/cloudwatch/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/cloudwatch/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -296,7 +311,7 @@ define logstash::output::cloudwatch (
 
   if ($dimensions != '') {
     validate_hash($dimensions)
-    $arr_dimensions = inline_template('<%= dimensions.to_a.flatten.inspect %>')
+    $arr_dimensions = inline_template('<%= dimensions.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_dimensions = "  dimensions => ${arr_dimensions}\n"
   }
 
@@ -394,9 +409,7 @@ define logstash::output::cloudwatch (
   file { $conffiles:
     ensure  => present,
     content => "output {\n cloudwatch {\n${opt_access_key_id}${opt_aws_credentials_file}${opt_dimensions}${opt_exclude_tags}${opt_field_dimensions}${opt_field_metricname}${opt_field_namespace}${opt_field_unit}${opt_field_value}${opt_fields}${opt_metricname}${opt_namespace}${opt_queue_size}${opt_region}${opt_secret_access_key}${opt_tags}${opt_timeframe}${opt_type}${opt_unit}${opt_use_ssl}${opt_value} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

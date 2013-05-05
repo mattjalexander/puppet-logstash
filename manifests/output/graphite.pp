@@ -153,10 +153,25 @@ define logstash::output::graphite (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_graphite_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/graphite/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_graphite_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/graphite/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/graphite/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -209,7 +224,7 @@ define logstash::output::graphite (
 
   if ($metrics != '') {
     validate_hash($metrics)
-    $arr_metrics = inline_template('<%= metrics.to_a.flatten.inspect %>')
+    $arr_metrics = inline_template('<%= metrics.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_metrics = "  metrics => ${arr_metrics}\n"
   }
 
@@ -249,9 +264,7 @@ define logstash::output::graphite (
   file { $conffiles:
     ensure  => present,
     content => "output {\n graphite {\n${opt_debug}${opt_exclude_metrics}${opt_exclude_tags}${opt_fields}${opt_fields_are_metrics}${opt_host}${opt_include_metrics}${opt_metrics}${opt_metrics_format}${opt_port}${opt_reconnect_interval}${opt_resend_on_failure}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

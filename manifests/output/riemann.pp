@@ -124,10 +124,25 @@ define logstash::output::riemann (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_riemann_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/riemann/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_riemann_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/riemann/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/riemann/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -158,7 +173,7 @@ define logstash::output::riemann (
 
   if ($riemann_event != '') {
     validate_hash($riemann_event)
-    $arr_riemann_event = inline_template('<%= riemann_event.to_a.flatten.inspect %>')
+    $arr_riemann_event = inline_template('<%= riemann_event.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_riemann_event = "  riemann_event => ${arr_riemann_event}\n"
   }
 
@@ -198,9 +213,7 @@ define logstash::output::riemann (
   file { $conffiles:
     ensure  => present,
     content => "output {\n riemann {\n${opt_debug}${opt_exclude_tags}${opt_fields}${opt_host}${opt_port}${opt_protocol}${opt_riemann_event}${opt_sender}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

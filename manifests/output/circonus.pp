@@ -96,10 +96,25 @@ define logstash::output::circonus (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_circonus_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/circonus/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_circonus_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/circonus/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/circonus/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -125,7 +140,7 @@ define logstash::output::circonus (
 
   if ($annotation != '') {
     validate_hash($annotation)
-    $arr_annotation = inline_template('<%= annotation.to_a.flatten.inspect %>')
+    $arr_annotation = inline_template('<%= annotation.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_annotation = "  annotation => ${arr_annotation}\n"
   }
 
@@ -149,9 +164,7 @@ define logstash::output::circonus (
   file { $conffiles:
     ensure  => present,
     content => "output {\n circonus {\n${opt_annotation}${opt_api_token}${opt_app_name}${opt_exclude_tags}${opt_fields}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

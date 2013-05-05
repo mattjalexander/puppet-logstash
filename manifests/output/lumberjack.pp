@@ -95,10 +95,25 @@ define logstash::output::lumberjack (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_lumberjack_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/lumberjack/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_lumberjack_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/lumberjack/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/lumberjack/${name}"
+
+  }
 
   #### Validate parameters
   if ($exclude_tags != '') {
@@ -156,9 +171,7 @@ define logstash::output::lumberjack (
 
       file { "${filesdir}/${basefilename_ssl_certificate}":
         source  => $ssl_certificate,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0640',
+        mode    => '0440',
         require => File[$filesdir]
       }
     } else {
@@ -183,8 +196,6 @@ define logstash::output::lumberjack (
   #### Manage the files directory
   file { $filesdir:
     ensure  => directory,
-    owner   => 'root',
-    group   => 'root',
     mode    => '0640',
     purge   => true,
     recurse => true,
@@ -197,9 +208,7 @@ define logstash::output::lumberjack (
   file { $conffiles:
     ensure  => present,
     content => "output {\n lumberjack {\n${opt_exclude_tags}${opt_fields}${opt_hosts}${opt_port}${opt_ssl_certificate}${opt_tags}${opt_type}${opt_window_size} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

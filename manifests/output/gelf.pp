@@ -192,10 +192,25 @@ define logstash::output::gelf (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_gelf_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/gelf/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_gelf_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/gelf/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/gelf/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -243,7 +258,7 @@ define logstash::output::gelf (
 
   if ($custom_fields != '') {
     validate_hash($custom_fields)
-    $arr_custom_fields = inline_template('<%= custom_fields.to_a.flatten.inspect %>')
+    $arr_custom_fields = inline_template('<%= custom_fields.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_custom_fields = "  custom_fields => ${arr_custom_fields}\n"
   }
 
@@ -308,9 +323,7 @@ define logstash::output::gelf (
   file { $conffiles:
     ensure  => present,
     content => "output {\n gelf {\n${opt_chunksize}${opt_custom_fields}${opt_exclude_tags}${opt_facility}${opt_fields}${opt_file}${opt_full_message}${opt_host}${opt_ignore_metadata}${opt_level}${opt_line}${opt_port}${opt_sender}${opt_ship_metadata}${opt_ship_tags}${opt_short_message}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

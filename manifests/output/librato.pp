@@ -133,10 +133,25 @@ define logstash::output::librato (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_librato_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/librato/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_librato_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/librato/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/librato/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -162,19 +177,19 @@ define logstash::output::librato (
 
   if ($counter != '') {
     validate_hash($counter)
-    $arr_counter = inline_template('<%= counter.to_a.flatten.inspect %>')
+    $arr_counter = inline_template('<%= counter.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_counter = "  counter => ${arr_counter}\n"
   }
 
   if ($annotation != '') {
     validate_hash($annotation)
-    $arr_annotation = inline_template('<%= annotation.to_a.flatten.inspect %>')
+    $arr_annotation = inline_template('<%= annotation.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_annotation = "  annotation => ${arr_annotation}\n"
   }
 
   if ($gauge != '') {
     validate_hash($gauge)
-    $arr_gauge = inline_template('<%= gauge.to_a.flatten.inspect %>')
+    $arr_gauge = inline_template('<%= gauge.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_gauge = "  gauge => ${arr_gauge}\n"
   }
 
@@ -203,9 +218,7 @@ define logstash::output::librato (
   file { $conffiles:
     ensure  => present,
     content => "output {\n librato {\n${opt_account_id}${opt_annotation}${opt_api_token}${opt_batch_size}${opt_counter}${opt_exclude_tags}${opt_fields}${opt_gauge}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }

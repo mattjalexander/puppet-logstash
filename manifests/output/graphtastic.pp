@@ -149,10 +149,25 @@ define logstash::output::graphtastic (
 
   require logstash::params
 
-  $confdirstart = prefix($instances, "${logstash::configdir}/")
-  $conffiles = suffix($confdirstart, "/config/output_graphtastic_${name}")
-  $services = prefix($instances, 'logstash-')
-  $filesdir = "${logstash::configdir}/files/output/graphtastic/${name}"
+  File {
+    owner => $logstash::logstash_user,
+    group => $logstash::logstash_group
+  }
+
+  if $logstash::multi_instance == true {
+
+    $confdirstart = prefix($instances, "${logstash::configdir}/")
+    $conffiles    = suffix($confdirstart, "/config/output_graphtastic_${name}")
+    $services     = prefix($instances, 'logstash-')
+    $filesdir     = "${logstash::configdir}/files/output/graphtastic/${name}"
+
+  } else {
+
+    $conffiles = "${logstash::configdir}/conf.d"
+    $services  = 'logstash'
+    $filesdir  = "${logstash::configdir}/files/output/graphtastic/${name}"
+
+  }
 
   #### Validate parameters
 
@@ -178,7 +193,7 @@ define logstash::output::graphtastic (
 
   if ($metrics != '') {
     validate_hash($metrics)
-    $arr_metrics = inline_template('<%= metrics.to_a.flatten.inspect %>')
+    $arr_metrics = inline_template('<%= metrics.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
     $opt_metrics = "  metrics => ${arr_metrics}\n"
   }
 
@@ -239,9 +254,7 @@ define logstash::output::graphtastic (
   file { $conffiles:
     ensure  => present,
     content => "output {\n graphtastic {\n${opt_batch_number}${opt_context}${opt_error_file}${opt_exclude_tags}${opt_fields}${opt_host}${opt_integration}${opt_metrics}${opt_port}${opt_retries}${opt_tags}${opt_type} }\n}\n",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     notify  => Service[$services],
     require => Class['logstash::package', 'logstash::config']
   }
