@@ -86,7 +86,7 @@ class logstash(
   $jarfile        = undef,
   $installpath    = $logstash::params::installpath,
   $logstash_user  = $logstash::pramas::logstash_user,
-  $logstash_group = $logstash::params::logstash_group
+  $logstash_group = $logstash::params::logstash_group,
   $configdir      = $logstash::params::configdir,
   $java_install   = false,
   $java_package   = undef,
