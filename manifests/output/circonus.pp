@@ -140,7 +140,7 @@ define logstash::output::circonus (
 
   if ($annotation != '') {
     validate_hash($annotation)
-    $arr_annotation = inline_template('<%= '['+annotation.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
+    $arr_annotation = inline_template('<%= "["+annotation.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+"]" %>')
     $opt_annotation = "  annotation => ${arr_annotation}\n"
   }
 

@@ -210,13 +210,13 @@ define logstash::output::statsd (
 
   if ($timing != '') {
     validate_hash($timing)
-    $arr_timing = inline_template('<%= '['+timing.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
+    $arr_timing = inline_template('<%= "["+timing.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+"]" %>')
     $opt_timing = "  timing => ${arr_timing}\n"
   }
 
   if ($count != '') {
     validate_hash($count)
-    $arr_count = inline_template('<%= '['+count.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
+    $arr_count = inline_template('<%= "["+count.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+"]" %>')
     $opt_count = "  count => ${arr_count}\n"
   }
 

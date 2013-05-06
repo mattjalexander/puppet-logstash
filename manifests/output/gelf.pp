@@ -258,7 +258,7 @@ define logstash::output::gelf (
 
   if ($custom_fields != '') {
     validate_hash($custom_fields)
-    $arr_custom_fields = inline_template('<%= '['+custom_fields.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
+    $arr_custom_fields = inline_template('<%= "["+custom_fields.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+"]" %>')
     $opt_custom_fields = "  custom_fields => ${arr_custom_fields}\n"
   }
 
