@@ -208,7 +208,7 @@ define logstash::input::lumberjack2 (
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_add_field = inline_template('<%= '['+add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 

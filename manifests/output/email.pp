@@ -228,13 +228,13 @@ define logstash::output::email (
 
   if ($match != '') {
     validate_hash($match)
-    $arr_match = inline_template('<%= match.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_match = inline_template('<%= '['+match.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_match = "  match => ${arr_match}\n"
   }
 
   if ($options != '') {
     validate_hash($options)
-    $arr_options = inline_template('<%= options.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_options = inline_template('<%= '['+options.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_options = "  options => ${arr_options}\n"
   }
 

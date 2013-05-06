@@ -182,13 +182,13 @@ define logstash::output::http (
 
   if ($headers != '') {
     validate_hash($headers)
-    $arr_headers = inline_template('<%= headers.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_headers = inline_template('<%= '['+headers.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_headers = "  headers => ${arr_headers}\n"
   }
 
   if ($mapping != '') {
     validate_hash($mapping)
-    $arr_mapping = inline_template('<%= mapping.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_mapping = inline_template('<%= '['+mapping.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_mapping = "  mapping => ${arr_mapping}\n"
   }
 

@@ -200,37 +200,37 @@ define logstash::output::metriccatcher (
 
   if ($meter != '') {
     validate_hash($meter)
-    $arr_meter = inline_template('<%= meter.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_meter = inline_template('<%= '['+meter.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_meter = "  meter => ${arr_meter}\n"
   }
 
   if ($biased != '') {
     validate_hash($biased)
-    $arr_biased = inline_template('<%= biased.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_biased = inline_template('<%= '['+biased.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_biased = "  biased => ${arr_biased}\n"
   }
 
   if ($gauge != '') {
     validate_hash($gauge)
-    $arr_gauge = inline_template('<%= gauge.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_gauge = inline_template('<%= '['+gauge.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_gauge = "  gauge => ${arr_gauge}\n"
   }
 
   if ($uniform != '') {
     validate_hash($uniform)
-    $arr_uniform = inline_template('<%= uniform.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_uniform = inline_template('<%= '['+uniform.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_uniform = "  uniform => ${arr_uniform}\n"
   }
 
   if ($counter != '') {
     validate_hash($counter)
-    $arr_counter = inline_template('<%= counter.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_counter = inline_template('<%= '['+counter.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_counter = "  counter => ${arr_counter}\n"
   }
 
   if ($timer != '') {
     validate_hash($timer)
-    $arr_timer = inline_template('<%= timer.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_timer = inline_template('<%= '['+timer.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_timer = "  timer => ${arr_timer}\n"
   }
 

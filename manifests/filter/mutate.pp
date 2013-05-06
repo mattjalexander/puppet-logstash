@@ -288,44 +288,44 @@ define logstash::filter::mutate (
 
   if ($rename != '') {
     validate_hash($rename)
-    $arr_rename = inline_template('<%= rename.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_rename = inline_template('<%= '['+rename.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_rename = "  rename => ${arr_rename}\n"
   }
 
   if ($replace != '') {
     validate_hash($replace)
-    $arr_replace = inline_template('<%= replace.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_replace = inline_template('<%= '['+replace.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_replace = "  replace => ${arr_replace}\n"
   }
 
   if ($split != '') {
     validate_hash($split)
     $var_split = $split
-    $arr_split = inline_template('<%= var_split.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_split = inline_template('<%= '['+var_split.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_split = "  split => ${arr_split}\n"
   }
 
   if ($merge != '') {
     validate_hash($merge)
-    $arr_merge = inline_template('<%= merge.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_merge = inline_template('<%= '['+merge.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_merge = "  merge => ${arr_merge}\n"
   }
 
   if ($convert != '') {
     validate_hash($convert)
-    $arr_convert = inline_template('<%= convert.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_convert = inline_template('<%= '['+convert.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_convert = "  convert => ${arr_convert}\n"
   }
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_add_field = inline_template('<%= '['+add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 
   if ($join != '') {
     validate_hash($join)
-    $arr_join = inline_template('<%= join.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_join = inline_template('<%= '['+join.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_join = "  join => ${arr_join}\n"
   }
 

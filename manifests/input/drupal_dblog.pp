@@ -213,13 +213,13 @@ define logstash::input::drupal_dblog (
 
   if ($databases != '') {
     validate_hash($databases)
-    $arr_databases = inline_template('<%= databases.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_databases = inline_template('<%= '['+databases.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_databases = "  databases => ${arr_databases}\n"
   }
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_add_field = inline_template('<%= '['+add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 

@@ -170,7 +170,7 @@ define logstash::output::zeromq (
 
   if ($sockopt != '') {
     validate_hash($sockopt)
-    $arr_sockopt = inline_template('<%= sockopt.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_sockopt = inline_template('<%= '['+sockopt.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_sockopt = "  sockopt => ${arr_sockopt}\n"
   }
 

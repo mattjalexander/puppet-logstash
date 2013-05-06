@@ -214,19 +214,19 @@ define logstash::output::riak (
 
   if ($nodes != '') {
     validate_hash($nodes)
-    $arr_nodes = inline_template('<%= nodes.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_nodes = inline_template('<%= '['+nodes.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_nodes = "  nodes => ${arr_nodes}\n"
   }
 
   if ($bucket_props != '') {
     validate_hash($bucket_props)
-    $arr_bucket_props = inline_template('<%= bucket_props.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_bucket_props = inline_template('<%= '['+bucket_props.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_bucket_props = "  bucket_props => ${arr_bucket_props}\n"
   }
 
   if ($ssl_opts != '') {
     validate_hash($ssl_opts)
-    $arr_ssl_opts = inline_template('<%= ssl_opts.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_ssl_opts = inline_template('<%= '['+ssl_opts.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_ssl_opts = "  ssl_opts => ${arr_ssl_opts}\n"
   }
 

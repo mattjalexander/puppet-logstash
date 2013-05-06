@@ -204,13 +204,13 @@ define logstash::filter::xml (
 
   if ($add_field != '') {
     validate_hash($add_field)
-    $arr_add_field = inline_template('<%= add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_add_field = inline_template('<%= '['+add_field.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_add_field = "  add_field => ${arr_add_field}\n"
   }
 
   if ($xpath != '') {
     validate_hash($xpath)
-    $arr_xpath = inline_template('<%= xpath.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_xpath = inline_template('<%= '['+xpath.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_xpath = "  xpath => ${arr_xpath}\n"
   }
 

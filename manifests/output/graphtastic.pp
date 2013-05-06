@@ -193,7 +193,7 @@ define logstash::output::graphtastic (
 
   if ($metrics != '') {
     validate_hash($metrics)
-    $arr_metrics = inline_template('<%= metrics.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ") %>')
+    $arr_metrics = inline_template('<%= '['+metrics.collect { |k,v| "\"#{k}\", \"#{v}\"" }.join(", ")+']' %>')
     $opt_metrics = "  metrics => ${arr_metrics}\n"
   }
 
