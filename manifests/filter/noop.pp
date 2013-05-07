@@ -115,7 +115,7 @@ define logstash::filter::noop (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_noop_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/noop/${name}"
 

@@ -124,7 +124,7 @@ define logstash::filter::clone (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_clone_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/clone/${name}"
 

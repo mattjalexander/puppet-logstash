@@ -98,7 +98,7 @@ define logstash::output::websocket (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_websocket_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/websocket/${name}"
 

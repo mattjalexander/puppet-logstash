@@ -163,7 +163,7 @@ define logstash::input::exec (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_exec_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/exec/${name}"
 

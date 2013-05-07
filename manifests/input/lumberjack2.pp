@@ -185,7 +185,7 @@ define logstash::input::lumberjack2 (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_lumberjack2_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/lumberjack2/${name}"
 

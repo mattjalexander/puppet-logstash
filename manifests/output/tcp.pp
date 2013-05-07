@@ -118,7 +118,7 @@ define logstash::output::tcp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_tcp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/tcp/${name}"
 

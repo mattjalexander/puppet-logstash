@@ -162,7 +162,7 @@ define logstash::output::riak (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_riak_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/riak/${name}"
 

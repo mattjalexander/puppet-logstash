@@ -163,7 +163,7 @@ define logstash::output::statsd (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_statsd_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/statsd/${name}"
 

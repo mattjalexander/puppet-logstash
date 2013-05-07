@@ -138,7 +138,7 @@ define logstash::output::riemann (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_riemann_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/riemann/${name}"
 

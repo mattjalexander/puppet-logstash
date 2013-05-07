@@ -187,7 +187,7 @@ define logstash::filter::kv (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_kv_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/kv/${name}"
 

@@ -130,7 +130,7 @@ define logstash::output::xmpp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_xmpp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/xmpp/${name}"
 

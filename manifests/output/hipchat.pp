@@ -127,7 +127,7 @@ define logstash::output::hipchat (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_hipchat_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/hipchat/${name}"
 

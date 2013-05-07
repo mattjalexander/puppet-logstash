@@ -144,7 +144,7 @@ define logstash::output::sqs (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_sqs_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/sqs/${name}"
 

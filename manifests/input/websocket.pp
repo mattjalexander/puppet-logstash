@@ -164,7 +164,7 @@ define logstash::input::websocket (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_websocket_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/websocket/${name}"
 

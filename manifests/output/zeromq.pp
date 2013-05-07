@@ -134,7 +134,7 @@ define logstash::output::zeromq (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_zeromq_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/zeromq/${name}"
 

@@ -146,7 +146,7 @@ define logstash::output::nagios_nsca (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_nagios_nsca_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/nagios_nsca/${name}"
 

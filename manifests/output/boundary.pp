@@ -149,7 +149,7 @@ define logstash::output::boundary (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_boundary_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/boundary/${name}"
 

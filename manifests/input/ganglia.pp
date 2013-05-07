@@ -161,7 +161,7 @@ define logstash::input::ganglia (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_ganglia_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/ganglia/${name}"
 

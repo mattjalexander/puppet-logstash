@@ -170,7 +170,7 @@ define logstash::output::metriccatcher (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_metriccatcher_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/metriccatcher/${name}"
 

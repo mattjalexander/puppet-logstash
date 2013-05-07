@@ -150,7 +150,7 @@ define logstash::filter::alter (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_alter_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/alter/${name}"
 

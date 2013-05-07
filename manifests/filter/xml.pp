@@ -163,7 +163,7 @@ define logstash::filter::xml (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_xml_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/xml/${name}"
 

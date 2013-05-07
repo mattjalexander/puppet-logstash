@@ -222,7 +222,7 @@ define logstash::filter::mutate (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_mutate_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/mutate/${name}"
 

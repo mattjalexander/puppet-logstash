@@ -148,7 +148,7 @@ define logstash::filter::geoip (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_geoip_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/geoip/${name}"
 

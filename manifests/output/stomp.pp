@@ -125,7 +125,7 @@ define logstash::output::stomp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_stomp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/stomp/${name}"
 

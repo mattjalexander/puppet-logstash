@@ -109,7 +109,7 @@ define logstash::output::lumberjack (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_lumberjack_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/lumberjack/${name}"
 

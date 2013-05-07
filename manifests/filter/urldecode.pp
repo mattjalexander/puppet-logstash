@@ -129,7 +129,7 @@ define logstash::filter::urldecode (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_urldecode_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/urldecode/${name}"
 

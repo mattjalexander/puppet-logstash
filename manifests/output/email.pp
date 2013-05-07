@@ -192,7 +192,7 @@ define logstash::output::email (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_email_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/email/${name}"
 

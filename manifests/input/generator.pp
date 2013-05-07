@@ -184,7 +184,7 @@ define logstash::input::generator (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_generator_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/generator/${name}"
 

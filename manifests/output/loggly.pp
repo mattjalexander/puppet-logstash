@@ -143,7 +143,7 @@ define logstash::output::loggly (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_loggly_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/loggly/${name}"
 

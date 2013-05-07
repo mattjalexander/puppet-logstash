@@ -156,7 +156,7 @@ define logstash::input::pipe (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_pipe_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/pipe/${name}"
 

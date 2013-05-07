@@ -147,7 +147,7 @@ define logstash::output::http (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_http_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/http/${name}"
 

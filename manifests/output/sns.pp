@@ -149,7 +149,7 @@ define logstash::output::sns (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_sns_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/sns/${name}"
 

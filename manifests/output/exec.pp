@@ -94,7 +94,7 @@ define logstash::output::exec (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_exec_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/exec/${name}"
 

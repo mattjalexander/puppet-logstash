@@ -83,7 +83,7 @@ define logstash::output::null (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_null_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/null/${name}"
 

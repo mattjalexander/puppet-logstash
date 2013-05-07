@@ -148,7 +148,7 @@ define logstash::filter::syslog_pri (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_syslog_pri_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/syslog_pri/${name}"
 

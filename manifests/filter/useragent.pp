@@ -143,7 +143,7 @@ define logstash::filter::useragent (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_useragent_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/useragent/${name}"
 

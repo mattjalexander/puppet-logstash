@@ -193,7 +193,7 @@ define logstash::output::rabbitmq (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_rabbitmq_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/rabbitmq/${name}"
 

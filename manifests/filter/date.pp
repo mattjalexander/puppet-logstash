@@ -156,7 +156,7 @@ define logstash::filter::date (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_date_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/date/${name}"
 

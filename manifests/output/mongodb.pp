@@ -138,7 +138,7 @@ define logstash::output::mongodb (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_mongodb_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/mongodb/${name}"
 

@@ -207,7 +207,7 @@ define logstash::input::zeromq (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_zeromq_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/zeromq/${name}"
 

@@ -274,7 +274,7 @@ define logstash::input::zenoss (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_zenoss_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/zenoss/${name}"
 

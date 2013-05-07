@@ -205,7 +205,7 @@ define logstash::input::graphite (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_graphite_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/graphite/${name}"
 

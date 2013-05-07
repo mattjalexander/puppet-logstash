@@ -206,7 +206,7 @@ define logstash::output::gelf (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_gelf_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/gelf/${name}"
 

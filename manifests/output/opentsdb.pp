@@ -118,7 +118,7 @@ define logstash::output::opentsdb (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_opentsdb_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/opentsdb/${name}"
 

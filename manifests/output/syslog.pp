@@ -165,7 +165,7 @@ define logstash::output::syslog (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_syslog_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/syslog/${name}"
 

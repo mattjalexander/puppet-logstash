@@ -182,7 +182,7 @@ define logstash::input::log4j (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_log4j_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/log4j/${name}"
 

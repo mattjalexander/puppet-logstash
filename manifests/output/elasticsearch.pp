@@ -187,7 +187,7 @@ define logstash::output::elasticsearch (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_elasticsearch_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/elasticsearch/${name}"
 

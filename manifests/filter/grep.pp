@@ -149,7 +149,7 @@ define logstash::filter::grep (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_grep_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/grep/${name}"
 

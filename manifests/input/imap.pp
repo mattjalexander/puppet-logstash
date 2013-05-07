@@ -195,7 +195,7 @@ define logstash::input::imap (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_imap_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/imap/${name}"
 

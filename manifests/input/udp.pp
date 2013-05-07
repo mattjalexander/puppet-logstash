@@ -168,7 +168,7 @@ define logstash::input::udp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_udp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/udp/${name}"
 

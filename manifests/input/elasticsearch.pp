@@ -179,7 +179,7 @@ define logstash::input::elasticsearch (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_elasticsearch_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/elasticsearch/${name}"
 

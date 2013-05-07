@@ -83,7 +83,7 @@ define logstash::output::internal (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_internal_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/internal/${name}"
 

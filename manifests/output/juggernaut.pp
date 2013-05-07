@@ -137,7 +137,7 @@ define logstash::output::juggernaut (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_juggernaut_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/juggernaut/${name}"
 

@@ -176,7 +176,7 @@ define logstash::input::gelf (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_gelf_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/gelf/${name}"
 

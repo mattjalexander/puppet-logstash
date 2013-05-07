@@ -265,7 +265,7 @@ define logstash::input::amqp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_amqp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/amqp/${name}"
 

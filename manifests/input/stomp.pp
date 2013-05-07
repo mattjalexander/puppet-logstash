@@ -180,7 +180,7 @@ define logstash::input::stomp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_stomp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/stomp/${name}"
 

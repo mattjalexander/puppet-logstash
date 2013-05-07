@@ -154,7 +154,7 @@ define logstash::input::varnishlog (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_varnishlog_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/varnishlog/${name}"
 

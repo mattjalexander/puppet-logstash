@@ -181,7 +181,7 @@ define logstash::input::xmpp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_xmpp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/xmpp/${name}"
 

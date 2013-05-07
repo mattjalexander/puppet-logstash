@@ -165,7 +165,7 @@ define logstash::input::relp (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_relp_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/relp/${name}"
 

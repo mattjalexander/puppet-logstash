@@ -123,7 +123,7 @@ define logstash::filter::environment (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_environment_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/environment/${name}"
 

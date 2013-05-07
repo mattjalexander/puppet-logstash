@@ -190,7 +190,7 @@ define logstash::input::syslog (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_syslog_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/syslog/${name}"
 

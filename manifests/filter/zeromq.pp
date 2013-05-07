@@ -158,7 +158,7 @@ define logstash::filter::zeromq (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_zeromq_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/zeromq/${name}"
 

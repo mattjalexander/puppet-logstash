@@ -137,7 +137,7 @@ define logstash::filter::json (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_json_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/json/${name}"
 

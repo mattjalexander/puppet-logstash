@@ -119,7 +119,7 @@ define logstash::output::zabbix (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/output_zabbix_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/output/zabbix/${name}"
 

@@ -174,7 +174,7 @@ define logstash::filter::metrics (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_metrics_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/metrics/${name}"
 

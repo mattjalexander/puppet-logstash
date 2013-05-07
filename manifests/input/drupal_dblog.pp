@@ -185,7 +185,7 @@ define logstash::input::drupal_dblog (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/input_drupal_dblog_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/input/drupal_dblog/${name}"
 

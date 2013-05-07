@@ -186,7 +186,7 @@ define logstash::filter::multiline (
 
   } else {
 
-    $conffiles = "${logstash::configdir}/conf.d"
+    $conffiles = "${logstash::configdir}/conf.d/filter_${order}_multiline_${name}"
     $services  = 'logstash'
     $filesdir  = "${logstash::configdir}/files/filter/multiline/${name}"
 
